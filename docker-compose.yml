@@ -1,43 +1,43 @@
-# MekoTools — Quizablage (Ablage fuer fuiz-Quizze)
-# Ablage: /poolio/docker/mekotools-quizablage/docker-compose.yml auf flip
+# MekoTools — Fuizstash (Ablage fuer fuiz-Quizze)
+# Ablage: /poolio/docker/mekotools-fuizstash/docker-compose.yml auf flip
 #
 # Zwei Datenschichten, bewusst getrennt:
-#  * ablage-daten  — eigener Bestand, eigenes Volume, gesichert durch rsnapshot.
+#  * daten  — eigener Bestand, eigenes Volume, gesichert durch rsnapshot.
 #  * fuiz-web-data — der Teilen-Speicher von fuiz (Tabelle kv_share). Wird LESEND
 #    fuer das Einreichen und SCHREIBEND nur fuer eigene Uebernahme-Eintraege
 #    gebraucht. Der Datentraeger gehoert root (wie die fuiz-Behaelter selbst),
 #    deshalb laeuft dieser Behälter als root — die Anwendung oeffnet ausschliesslich
 #    kv_share und fasst fuiz.db nie an.
 services:
-  ablage:
+  fuizstash:
     build: ./quelle
-    image: mekotools-quizablage:0.1.0
-    container_name: mekotools-quizablage
+    image: mekotools-fuizstash:0.1.0
+    container_name: mekotools-fuizstash
     restart: unless-stopped
     user: "0:0"
     environment:
-      - ABLAGE_DATEN=/daten/ablage.db
+      - FUIZSTASH_DATEN=/daten/fuizstash.db
       - FUIZ_KV=/fuiz/kv.db
-      - ABLAGE_FUIZ_BASIS=https://fuiz.mekotools.de
-      - ABLAGE_FUIZ_HOSTS=fuiz.mekotools.de
-      - ABLAGE_RAEUMEN_STUNDEN=6
+      - FUIZSTASH_FUIZ_BASIS=https://fuiz.mekotools.de
+      - FUIZSTASH_FUIZ_HOSTS=fuiz.mekotools.de
+      - FUIZSTASH_RAEUMEN_STUNDEN=6
     volumes:
-      - ablage-daten:/daten
+      - daten:/daten
       - fuiz-web-data:/fuiz
     networks: [coolify]
     labels:
       - traefik.enable=true
       - traefik.docker.network=coolify
-      - traefik.http.routers.mekotools-quizablage.rule=Host(`quizablage.mekotools.de`)
-      - traefik.http.routers.mekotools-quizablage.entrypoints=http
-      - traefik.http.middlewares.mekotools-scheme-quizablage.headers.customrequestheaders.X-Forwarded-Host=quizablage.mekotools.de
-      - traefik.http.middlewares.mekotools-scheme-quizablage.headers.customrequestheaders.X-Forwarded-Port=443
-      - traefik.http.middlewares.mekotools-scheme-quizablage.headers.customrequestheaders.X-Forwarded-Proto=https
-      - traefik.http.routers.mekotools-quizablage.middlewares=mekotools-scheme-quizablage,mekotools-auth
-      - traefik.http.services.mekotools-quizablage.loadbalancer.server.port=8000
+      - traefik.http.routers.mekotools-fuizstash.rule=Host(`fuizstash.mekotools.de`)
+      - traefik.http.routers.mekotools-fuizstash.entrypoints=http
+      - traefik.http.middlewares.mekotools-scheme-fuizstash.headers.customrequestheaders.X-Forwarded-Host=fuizstash.mekotools.de
+      - traefik.http.middlewares.mekotools-scheme-fuizstash.headers.customrequestheaders.X-Forwarded-Port=443
+      - traefik.http.middlewares.mekotools-scheme-fuizstash.headers.customrequestheaders.X-Forwarded-Proto=https
+      - traefik.http.routers.mekotools-fuizstash.middlewares=mekotools-scheme-fuizstash,mekotools-auth
+      - traefik.http.services.mekotools-fuizstash.loadbalancer.server.port=8000
 
 volumes:
-  ablage-daten:
+  daten:
   fuiz-web-data:
     external: true
     name: mekotools-fuiz_fuiz-web-data

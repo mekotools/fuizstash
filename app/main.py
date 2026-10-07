@@ -1,4 +1,4 @@
-"""MekoTools-Quizablage — Ablage für fuiz-Quizze, an der Anmeldung hängend.
+"""MekoTools-Fuizstash — Ablage für fuiz-Quizze, an der Anmeldung hängend.
 
 Zugang ausschließlich über die Sperre (Forward-Auth): die Identität kommt aus
 den Kopfzeilen `remote-user`, `remote-email`, `remote-sub`. Ohne diese
@@ -23,11 +23,11 @@ from fastapi.templating import Jinja2Templates
 from . import datenbank, fuizspeicher, kennungen
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-protokoll = logging.getLogger("quizablage")
+protokoll = logging.getLogger("fuizstash")
 
 BASISORDNER = os.path.dirname(__file__)
-FUIZ_BASIS = os.environ.get("ABLAGE_FUIZ_BASIS", "https://fuiz.mekotools.de").rstrip("/")
-AUFBEWAHRUNG_STUNDEN = int(os.environ.get("ABLAGE_RAEUMEN_STUNDEN", "6"))
+FUIZ_BASIS = os.environ.get("FUIZSTASH_FUIZ_BASIS", "https://fuiz.mekotools.de").rstrip("/")
+AUFBEWAHRUNG_STUNDEN = int(os.environ.get("FUIZSTASH_RAEUMEN_STUNDEN", "6"))
 
 
 @dataclass
@@ -64,7 +64,7 @@ async def lebensdauer(app: FastAPI):
     aufgabe.cancel()
 
 
-app = FastAPI(title="MekoTools-Quizablage", lifespan=lebensdauer, docs_url=None, redoc_url=None)
+app = FastAPI(title="MekoTools-Fuizstash", lifespan=lebensdauer, docs_url=None, redoc_url=None)
 app.mount("/statisch", StaticFiles(directory=os.path.join(BASISORDNER, "statisch")), name="statisch")
 vorlagen = Jinja2Templates(directory=os.path.join(BASISORDNER, "vorlagen"))
 

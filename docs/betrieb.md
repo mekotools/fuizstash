@@ -1,14 +1,14 @@
-# Betrieb — Quizablage
+# Betrieb — Fuizstash
 
 ## Wo was liegt
 
 | Sache | Ort |
 | --- | --- |
-| Adresse | https://quizablage.mekotools.de (nur mit Anmeldung) |
-| Stapel auf flip | `/poolio/docker/mekotools-quizablage` (`docker-compose.yml`, `quelle/`) |
-| Eigener Bestand | Docker-Volume `mekotools-quizablage_ablage-daten` → `/daten/ablage.db` |
+| Adresse | https://fuizstash.mekotools.de (nur mit Anmeldung) |
+| Stapel auf flip | `/poolio/docker/mekotools-fuizstash` (`docker-compose.yml`, `quelle/`) |
+| Eigener Bestand | Docker-Volume `mekotools-fuizstash_daten` → `/daten/fuizstash.db` |
 | Teilen-Speicher von fuiz | Volume `mekotools-fuiz_fuiz-web-data` → im Behälter unter `/fuiz/kv.db` |
-| Umgebung | `ABLAGE_DATEN`, `FUIZ_KV`, `ABLAGE_FUIZ_BASIS`, `ABLAGE_FUIZ_HOSTS`, `ABLAGE_RAEUMEN_STUNDEN` |
+| Umgebung | `FUIZSTASH_DATEN`, `FUIZ_KV`, `FUIZSTASH_FUIZ_BASIS`, `FUIZSTASH_FUIZ_HOSTS`, `FUIZSTASH_RAEUMEN_STUNDEN` |
 | Sicherung | rsnapshot auf flip erfasst `/poolio` |
 
 ## Wie es arbeitet
@@ -20,7 +20,7 @@
   Der Eintrag bleibt dauerhaft und wird bei erneuter Neueinreichung desselben Titels aktualisiert.
 - **Löschen** verschiebt in den Papierkorb (30 Tage). Endgültiges Löschen entfernt den Eintrag, den
   eigenen Übernahme-Eintrag im fuiz-Speicher und die zugehörigen Verlaufszeilen, danach `VACUUM`.
-- **Papierkorb-Frist** wird im Prozess alle 6 Stunden geprüft (`ABLAGE_RAEUMEN_STUNDEN`).
+- **Papierkorb-Frist** wird im Prozess alle 6 Stunden geprüft (`FUIZSTASH_RAEUMEN_STUNDEN`).
 - **Kopplung** wird beim Start und danach höchstens alle 30 Sekunden geprüft (Probeeintrag mit
   kurzer Frist, sofort wieder entfernt). Fehlt die Tabelle, zeigt jede Seite einen Betriebsvermerk.
 
@@ -34,8 +34,8 @@
   „Import" einlesen.
 - Einrichtungsregel der Sperre (in `/poolio/docker/mekotools-auth/.env`):
 
-      TINYAUTH_APPS_QUIZABLAGE_CONFIG_DOMAIN=quizablage.mekotools.de
-      TINYAUTH_APPS_QUIZABLAGE_OAUTH_WHITELIST=<erlaubte Anmeldeadresse>
+      TINYAUTH_APPS_FUIZSTASH_CONFIG_DOMAIN=fuizstash.mekotools.de
+      TINYAUTH_APPS_FUIZSTASH_OAUTH_WHITELIST=<erlaubte Anmeldeadresse>
 
   Weitere Lehrkräfte bekommen je eine weitere Zeile (`_OAUTH_WHITELIST` ist eine Liste).
   Danach **nur** den Sperrdienst neu erzeugen: `docker compose up -d --no-deps tinyauth` — ein
@@ -49,8 +49,8 @@
 ## Notfälle
 
 - **Seite zeigt „Verbindung zu fuiz gestört"**: Volume-Einbindung prüfen
-  (`docker inspect mekotools-quizablage`), `/gesundheit` aufrufen. Die Ablage selbst bleibt lesbar;
+  (`docker inspect mekotools-fuizstash`), `/gesundheit` aufrufen. Die Ablage selbst bleibt lesbar;
   nur Einreichen und Übergeben sind gesperrt.
 - **Quiz im Browser fehlt nach dem Öffnen**: Übernahme-Link im Adressfeld erneut aufrufen; der
   Eintrag ist fristlos. Hilft das nicht, „Sicherung" herunterladen und in fuiz importieren.
-- **Behälter neu bauen**: `cd /poolio/docker/mekotools-quizablage && docker compose build && docker compose up -d --no-deps ablage`.
+- **Behälter neu bauen**: `cd /poolio/docker/mekotools-fuizstash && docker compose build && docker compose up -d --no-deps ablage`.

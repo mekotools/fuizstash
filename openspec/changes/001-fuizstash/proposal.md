@@ -1,4 +1,4 @@
-# Change 001 — Quiz-Ablage auf dem Server (Weg B)
+# Change 001 — Fuizstash auf dem Server (Weg B)
 
 **Status:** umgesetzt und ausgeliefert (07.10.2026); Katalogeintrag offen
 **Datum:** 2026-10-07
@@ -43,8 +43,8 @@ Verhaltens-Delta gegenüber heute:
 
 | Fähigkeit | Art | Datei |
 | --- | --- | --- |
-| Ablage | ADDED | `changes/001-quizablage/specs/ablage/spec.md` |
-| Zugang | ADDED | `changes/001-quizablage/specs/zugang/spec.md` |
+| Ablage | ADDED | `changes/001-fuizstash/specs/ablage/spec.md` |
+| Zugang | ADDED | `changes/001-fuizstash/specs/zugang/spec.md` |
 
 ## Nicht-Ziele (ausdrücklich)
 

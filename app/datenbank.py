@@ -1,4 +1,4 @@
-"""Datenhaltung der Quizablage (SQLite, ein Prozess, keine Fremddienste)."""
+"""Datenhaltung der Fuizstash (SQLite, ein Prozess, keine Fremddienste)."""
 
 from __future__ import annotations
 
@@ -82,7 +82,7 @@ def _jetzt() -> str:
 
 
 def pfad() -> str:
-    return os.environ.get("ABLAGE_DATEN", "/daten/ablage.db")
+    return os.environ.get("FUIZSTASH_DATEN", "/daten/fuizstash.db")
 
 
 def verbinden() -> sqlite3.Connection:

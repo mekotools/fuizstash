@@ -1,4 +1,4 @@
-# Aufgaben — Quiz-Ablage (Change 001)
+# Aufgaben — Fuizstash (Change 001)
 
 Stand 07.10.2026. Belege je Punkt im `docs/pruefbericht.md`.
 
@@ -15,7 +15,7 @@ Stand 07.10.2026. Belege je Punkt im `docs/pruefbericht.md`.
 
 ## 1. Dienst (Backend)
 
-- [x] 1.1 Gerüst in `/poolio/docker/mekotools-quizablage` — SQLite, ein Prozess, Scheduler im
+- [x] 1.1 Gerüst in `/poolio/docker/mekotools-fuizstash` — SQLite, ein Prozess, Scheduler im
       Prozess (Papierkorb-Räumung alle 6 Stunden), keine Fremddienste.
 - [x] 1.2 Bestand je Person: Anlegen, Auflisten, Einzelabruf, Größenkennzahlen.
 - [x] 1.3 Einreichen über Teilen-Kennung (lesender Zugriff); Fehlerfälle mit Klartextgrund
@@ -32,13 +32,13 @@ Stand 07.10.2026. Belege je Punkt im `docs/pruefbericht.md`.
 
 ## 2. Zugang
 
-- [x] 2.1 Traefik-Kennzeichnungen (`quizablage.mekotools.de`, Sperre `mekotools-auth`) — von außen
+- [x] 2.1 Traefik-Kennzeichnungen (`fuizstash.mekotools.de`, Sperre `mekotools-auth`) — von außen
       belegt: HTTP 401 mit Anmelde-Weiterleitung.
 - [x] 2.2 Identität aus den Kopfzeilen (`remote-sub`, `remote-user`, `remote-email`); Aufrufe ohne
       Kopfzeilen werden abgelehnt und protokolliert.
 - [x] 2.3 Gegenprobe ohne Anmeldung: landet an der Anmeldung („login_for=app" mit Rückleitung auf
       die Ablage). **Offen:** Wirkung des Abmeldens (menschlicher Klickweg).
-- [x] 2.4 Regel für die Sperre eingetragen (`TINYAUTH_APPS_QUIZABLAGE_CONFIG_DOMAIN` und
+- [x] 2.4 Regel für die Sperre eingetragen (`TINYAUTH_APPS_FUIZSTASH_CONFIG_DOMAIN` und
       `_OAUTH_WHITELIST`); Sperrdienst einzeln neu erzeugt, andere Dienste des Stapels unberührt
       (`pocket-id` lief weiter, `shadowbroker` weiterhin 401).
 
@@ -65,7 +65,7 @@ Stand 07.10.2026. Belege je Punkt im `docs/pruefbericht.md`.
 ## 5. Auslieferung
 
 - [x] 5.1 Behälter läuft gesund, von außen erreichbar **nur** mit Anmeldung.
-- [ ] 5.2 Katalogeintrag `mekotools-quizablage` — **offen**: braucht die drei Doku-Bausteine
+- [ ] 5.2 Katalogeintrag `mekotools-fuizstash` — **offen**: braucht die drei Doku-Bausteine
       (Anleitung, Didaktik, Unterrichtsentwurf) und die Entscheidung, ob ein Werkzeug, das ein
       Konto verlangt, in den öffentlichen Katalog gehört.
 - [x] 5.3 Betriebsdoku: `README.md` (Adresse, Speicherorte, Sicherung, Papierkorb, Kopplung,

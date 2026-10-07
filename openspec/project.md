@@ -1,4 +1,4 @@
-# Quiz-Ablage für fuiz (MekoTools)
+# Fuizstash für fuiz (MekoTools)
 
 ## Zweck
 

@@ -1,4 +1,4 @@
-# Prüfbericht — Quizablage (Change 001)
+# Prüfbericht — Fuizstash (Change 001)
 
 Stand: 07.10.2026. Alles hier Genannte wurde ausgeführt, nicht gefolgert. Wo etwas
 **nicht** geprüft ist, steht das ausdrücklich dabei.
@@ -30,13 +30,13 @@ Papierkorb-Frist, Grenzen je Quiz und je Person, Einstellungen, gestörte Kopplu
 
 Die Prüfungen messen also wirklich das, was sie behaupten.
 
-## 3. Abnahme am lebenden System (`quizablage.mekotools.de`)
+## 3. Abnahme am lebenden System (`fuizstash.mekotools.de`)
 
 Ausgeführt am 07.10.2026 gegen den laufenden Dienst, ausschließlich mit eigenen
 Testdaten; anschließend vollständig aufgeräumt.
 
 - **Zugang:** Aufruf von außen ohne Anmeldung → **HTTP 401** mit
-  `x-tinyauth-location: https://tinyauth.mekotools.de/login?login_for=app&redirect_uri=…quizablage.mekotools.de%2Fablage`.
+  `x-tinyauth-location: https://tinyauth.mekotools.de/login?login_for=app&redirect_uri=…fuizstash.mekotools.de%2Fablage`.
   Ohne Kopfzeilen am Behälter selbst → `{"detail":"Keine Anmeldung erkennbar…"}`.
 - **Einreichen:** Teilen-Link des eigenen Bildquiz (Kennung `a739e463…`) eingereicht →
   Eintrag „Bildprobe (selbsttragend)", **2 Fragen · 716 B**, Speicherbalken

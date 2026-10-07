@@ -1,4 +1,4 @@
-# Design — Quiz-Ablage (Change 001)
+# Design — Fuizstash (Change 001)
 
 ## Ausgangslage (gemessen, 07.10.2026)
 
@@ -29,7 +29,7 @@ Weg A wäre das nahtlosere Erlebnis, verlangt aber einen **eigenen Bau** des Web
 endet das digest-genagelte Spiegeln für dieses eine Abbild, und wir pflegen dauerhaft einen Patch
 gegen eine fremde Codebasis. Aufwand und Dauerrisiko stehen in keinem Verhältnis zum Nutzen.
 
-Gewählt: ein **eigener kleiner Dienst** (`quizablage.mekotools.de`) hinter der Sperre. Er benutzt
+Gewählt: ein **eigener kleiner Dienst** (`fuizstash.mekotools.de`) hinter der Sperre. Er benutzt
 fuiz nur über Wege, die die amtliche Software ohnehin anbietet. Kein Eingriff in die Abbilder.
 
 ## Einreichen: Teilen-Link als Hauptweg

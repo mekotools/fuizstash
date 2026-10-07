@@ -24,7 +24,7 @@ class KennungFehler(ValueError):
 
 
 def erlaubte_hosts() -> set[str]:
-    roh = os.environ.get("ABLAGE_FUIZ_HOSTS", "fuiz.mekotools.de,fuiz.app.n0ne.de")
+    roh = os.environ.get("FUIZSTASH_FUIZ_HOSTS", "fuiz.mekotools.de,fuiz.app.n0ne.de")
     return {h.strip().lower() for h in roh.split(",") if h.strip()}
 
 

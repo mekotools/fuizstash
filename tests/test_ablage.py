@@ -1,4 +1,4 @@
-"""Prüfungen der Quizablage.
+"""Prüfungen der Fuizstash.
 
 Aufbau: je Test eine eigene Ablage-Datenbank und ein eigener fuiz-Teilenspeicher.
 Geprüft wird das Verhalten an den Rändern — ohne Anmeldung, getrennte Bestände,
@@ -51,7 +51,7 @@ def umgebung(tmp_path, monkeypatch):
         v.execute("CREATE TABLE kv_share (key TEXT PRIMARY KEY, value TEXT NOT NULL, "
                   "expires_at INTEGER)")
 
-    monkeypatch.setenv("ABLAGE_DATEN", str(ablage))
+    monkeypatch.setenv("FUIZSTASH_DATEN", str(ablage))
     monkeypatch.setenv("FUIZ_KV", str(kv))
 
     from app import main

@@ -1,12 +1,12 @@
-# MekoTools-Quizablage — schlanker Behälter, ein Prozess, SQLite.
+# MekoTools-Fuizstash — schlanker Behälter, ein Prozess, SQLite.
 FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    AGBLAGE_DATEN=/daten/ablage.db \
+    AGBLAGE_DATEN=/daten/fuizstash.db \
     FUIZ_KV=/daten/fuiz-kv.db
 
-WORKDIR /opt/quizablage
+WORKDIR /opt/fuizstash
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt

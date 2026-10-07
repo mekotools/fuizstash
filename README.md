@@ -1,13 +1,13 @@
-# MekoTools-Quizablage
+# MekoTools-Fuizstash
 
 Ablage für fuiz-Quizze, an der MekoTools-Anmeldung hängend: Quizze liegen auf dem
 Server, sind geräteunabhängig, wiederherstellbar und werden mit einem Klick als
 Kopie im Browser geöffnet.
 
-- **Erreichbar unter:** https://quizablage.mekotools.de (nur mit Anmeldung)
+- **Erreichbar unter:** https://fuizstash.mekotools.de (nur mit Anmeldung)
 - **Betrieb, Speicherorte, Notfälle:** [docs/betrieb.md](docs/betrieb.md)
 - **Prüfbericht (was belegt ist und was nicht):** [docs/pruefbericht.md](docs/pruefbericht.md)
-- **Entwurf und Aufgaben:** `openspec/changes/001-quizablage/` · **Überblick:** `openspec/project.md`
+- **Entwurf und Aufgaben:** `openspec/changes/001-fuizstash/` · **Überblick:** `openspec/project.md`
 
 ## Warum
 
@@ -63,9 +63,9 @@ ausliefern.sh         Spiegeln, bauen, neu erzeugen
 ## Umgebung
 
 - `FUIZ_KV` — Pfad zur `kv.db` von fuiz im Behälter (dort `/fuiz/kv.db`)
-- `ABLAGE_DATEN` — Pfad zur eigenen Datenbank (Vorgabe `/daten/ablage.db`)
-- `ABLAGE_FUIZ_BASIS` — Adresse der eigenen fuiz-Instanz für die Übernahme
-- `ABLAGE_FUIZ_HOSTS` — erlaubte Hosts für Teilen-Links (Komma-getrennt)
+- `FUIZSTASH_DATEN` — Pfad zur eigenen Datenbank (Vorgabe `/daten/fuizstash.db`)
+- `FUIZSTASH_FUIZ_BASIS` — Adresse der eigenen fuiz-Instanz für die Übernahme
+- `FUIZSTASH_FUIZ_HOSTS` — erlaubte Hosts für Teilen-Links (Komma-getrennt)
 
 Inhalte stammen aus der eigenen fuiz-Instanz; fremde Anbieter (z. B. `fuiz.org`)
 werden abgelehnt, weil deren Inhalte nicht im eigenen Teilen-Speicher liegen.
