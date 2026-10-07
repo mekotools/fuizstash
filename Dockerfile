@@ -1,6 +1,12 @@
 # MekoTools-Fuizstash — schlanker Behälter, ein Prozess, SQLite.
 FROM python:3.12-slim
 
+# Anker zum Spiegel-Repo: über diesen Aufkleber verknüpft GitHub das Paket in
+# GHCR mit dem Repo — erst dadurch lässt es sich öffentlich stellen.
+LABEL org.opencontainers.image.source="https://github.com/mekotools/fuizstash" \
+      org.opencontainers.image.title="Fuizstash" \
+      org.opencontainers.image.description="Ablage für fuiz-Quizze (MekoTools)"
+
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     AGBLAGE_DATEN=/daten/fuizstash.db \
