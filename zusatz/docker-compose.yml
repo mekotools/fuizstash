@@ -1,0 +1,36 @@
+# MekoTools — Fuiz-Zusatz („In Fuizstash ablegen" neben dem Teilen-Eintrag)
+# Ablage auf flip: /poolio/docker/mekotools-fuiz-zusatz/
+#
+# Eigener Stapel, damit die digest-genagelten fuiz-Abbilder unverändert bleiben:
+# hier läuft nur ein nginx, der ein Zusatzskript in die Seiten einhängt und
+# alles andere unverändert an den fuiz-Behälter weiterreicht.
+#
+# Fällt dieser Behälter aus, verschwinden seine Traefik-Kennzeichnungen und der
+# Verkehr läuft wieder unmittelbar zu fuiz — der Behelf ist damit folgenlos
+# rücknehmbar (docker compose down).
+services:
+  zusatz:
+    image: nginx:1.27-alpine
+    container_name: mekotools-fuiz-zusatz
+    restart: unless-stopped
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./zusatz.js:/usr/share/nginx/html/mekotools-zusatz.js:ro
+    networks: [coolify]
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=coolify
+      # Prüfadresse: zeigt auf denselben Schieber, ohne den Betrieb zu berühren.
+      - traefik.http.routers.mekotools-fuiz-zusatz-probe.rule=Host(`fuiz-zusatz.app.n0ne.de`)
+      - traefik.http.routers.mekotools-fuiz-zusatz-probe.entrypoints=http
+      - traefik.http.routers.mekotools-fuiz-zusatz-probe.service=mekotools-fuiz-zusatz
+      # Wirkbetrieb: höhere Priorität als der fuiz-Router. /api (Spielserver) und
+      # /corkboard (Bildspeicher) bleiben beim Alten.
+      - traefik.http.routers.mekotools-fuiz-zusatz.rule=(Host(`fuiz.mekotools.de`) || Host(`fuiz.app.n0ne.de`)) && !PathPrefix(`/api`) && !PathPrefix(`/corkboard`)
+      - traefik.http.routers.mekotools-fuiz-zusatz.entrypoints=http
+      - traefik.http.routers.mekotools-fuiz-zusatz.priority=1000
+      - traefik.http.services.mekotools-fuiz-zusatz.loadbalancer.server.port=8080
+
+networks:
+  coolify:
+    external: true

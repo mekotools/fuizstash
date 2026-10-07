@@ -222,6 +222,10 @@ async def ablage(request: Request, nutzer: Nutzer = Depends(nutzer_lesen)) -> HT
     papierkorb = datenbank.liste(nutzer.schluessel, papierkorb=True)
     grenze = grenzen()
     belegt = datenbank.belegung(nutzer.schluessel)
+    # Aus fuiz mitgebrachter Teilen-Link (Zusatzlink „In Fuizstash ablegen"):
+    # wird nur vorbelegt und im Formular einmal ausgeloest — abgelehnt wird er
+    # dort wie jede andere Eingabe.
+    vorbelegung = (request.query_params.get("link") or "").strip()[:2000]
     return seite(
         request,
         "ablage.html",
@@ -232,6 +236,7 @@ async def ablage(request: Request, nutzer: Nutzer = Depends(nutzer_lesen)) -> HT
         belegt=belegt,
         belegt_text=groesse_text(belegt),
         grenze=grenze,
+        vorbelegung=vorbelegung,
         anteil=min(100, round(belegt / grenze["nutzer"] * 100)) if grenze["nutzer"] else 0,
         groesse_text=groesse_text,
         zeit_text=zeit_text,

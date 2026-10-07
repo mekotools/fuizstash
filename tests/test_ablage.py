@@ -366,3 +366,44 @@ def test_fehlende_tabelle_wird_gemeldet(umgebung, tmp_path, monkeypatch):
     daten = umgebung["klient"].get("/gesundheit").json()
     assert daten["ok"] is False
     assert "kv_share fehlt" in daten["teilen_speicher"]["hinweis"]
+
+
+# ---------------------------------------------------------------- Zusatzlink aus fuiz
+
+def test_mitgebrachter_link_wird_vorbelegt(umgebung):
+    """Der Zusatzlink aus fuiz (?link=…) legt den Teilen-Link ins Feld und loest
+    das Formular einmal aus — abgelehnt wird er wie jede andere Eingabe."""
+    kennung = umgebung["teilen"](quiz_json("Mitgebracht"))
+    link = f"https://fuiz.mekotools.de/share/{kennung}"
+    seite_ = umgebung["klient"].get(
+        "/ablage", params={"link": link}, headers=KOPF_A).text
+    assert f'value="{link}"' in seite_
+    assert "aus fuiz übernommen" in seite_
+    assert "requestSubmit()" in seite_
+    # Und die Vorbelegung ist wirklich ablegbar
+    antwort = einreichen(umgebung, link)
+    assert "Mitgebracht" in antwort.text
+
+
+def test_ohne_mitgebrachten_link_kein_automatikstart(umgebung):
+    seite_ = umgebung["klient"].get("/ablage", headers=KOPF_A).text
+    assert "requestSubmit()" not in seite_
+    assert "aus fuiz übernommen" not in seite_
+
+
+def test_mitgebrachter_link_wird_entschaerft(umgebung):
+    """Kein Ausbruch aus dem Feld: der Wert wird als Attribut maskiert."""
+    boese = '"><script>alert(1)</script>'
+    seite_ = umgebung["klient"].get(
+        "/ablage", params={"link": boese}, headers=KOPF_A).text
+    assert "<script>alert(1)</script>" not in seite_
+    assert "&lt;script&gt;" in seite_ or "&#34;&gt;" in seite_ or "&quot;&gt;" in seite_
+
+
+def test_mitgebrachter_link_startet_nicht_automatisch_bei_fremdem_inhalt(umgebung):
+    """Nur Teilungsadressen loesen die Automatik aus — sonst bleibt es beim Formular."""
+    seite_ = umgebung["klient"].get(
+        "/ablage", params={"link": "https://example.org/irgendwas"}, headers=KOPF_A).text
+    assert "https://example.org/irgendwas" in seite_
+    # Der Automatikstart ist im Skript an das Muster gebunden
+    assert "/\\/share\\/[0-9a-f][0-9a-f-]{7,}/i" in seite_

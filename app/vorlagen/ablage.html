@@ -11,11 +11,16 @@
   <form method="post" action="/ablage/einreichen" id="einreichen">
     <label for="eingabe">Teilen-Link oder Kennung</label>
     <input id="eingabe" name="eingabe" type="text" required autocomplete="off"
-           spellcheck="false" inputmode="url"
+           spellcheck="false" inputmode="url" value="{{ vorbelegung }}"
            placeholder="https://{{ fuiz_basis.split('//')[-1] }}/share/…">
     <button type="submit" id="abschicken">Ablegen</button>
     <span class="laeuft" id="laeuft" hidden>Frage fuiz ab …</span>
   </form>
+  {% if vorbelegung %}
+  <p class="hinweis klein" id="mitgebracht">
+    Teilen-Link aus fuiz übernommen — keine Eingabe nötig.
+  </p>
+  {% endif %}
   <p class="hinweis klein">
     Ein neues Quiz mit demselben Titel ersetzt den vorhandenen Eintrag.
     Ein bereits vergebener Übernahme-Link zeigt danach den neuen Stand.
@@ -107,5 +112,15 @@ document.getElementById('einreichen').addEventListener('submit', function () {
   document.getElementById('abschicken').disabled = true;
   document.getElementById('laeuft').hidden = false;
 });
+{% if vorbelegung %}
+// Aus fuiz mitgebrachter Teilen-Link: einmal ablegen, ohne zweiten Handgriff.
+// Nur wenn die Vorbelegung wirklich wie eine Teilungsadresse aussieht.
+(function () {
+  var formular = document.getElementById('einreichen');
+  if (formular && /\/share\/[0-9a-f][0-9a-f-]{7,}/i.test(formular.eingabe.value)) {
+    formular.requestSubmit();
+  }
+})();
+{% endif %}
 </script>
 {% endblock %}
