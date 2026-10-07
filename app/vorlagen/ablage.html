@@ -1,0 +1,111 @@
+{% extends "grund.html" %}
+{% block titel %}Ablage{% endblock %}
+
+{% block inhalt %}
+<section class="karte">
+  <h1>Quiz ablegen</h1>
+  <p class="hinweis">
+    In fuiz ein Quiz öffnen, auf <em>Teilen</em> gehen und den Link hier einfügen.
+    Bilder reisen mit — abgelegt wird eine vollständige Kopie.
+  </p>
+  <form method="post" action="/ablage/einreichen" id="einreichen">
+    <label for="eingabe">Teilen-Link oder Kennung</label>
+    <input id="eingabe" name="eingabe" type="text" required autocomplete="off"
+           spellcheck="false" inputmode="url"
+           placeholder="https://{{ fuiz_basis.split('//')[-1] }}/share/…">
+    <button type="submit" id="abschicken">Ablegen</button>
+    <span class="laeuft" id="laeuft" hidden>Frage fuiz ab …</span>
+  </form>
+  <p class="hinweis klein">
+    Ein neues Quiz mit demselben Titel ersetzt den vorhandenen Eintrag.
+    Ein bereits vergebener Übernahme-Link zeigt danach den neuen Stand.
+  </p>
+</section>
+
+<section class="karte">
+  <h2>Speicher</h2>
+  <div class="balken" role="img"
+       aria-label="{{ belegt_text }} von {{ grenze.nutzer_mb|round(0,'floor')|int }} MB belegt">
+    <span style="width: {{ anteil }}%"></span>
+  </div>
+  <p class="hinweis klein">
+    {{ belegt_text }} von {{ grenze.nutzer_mb|round(0,'floor')|int }} MB belegt
+    ({{ anteil }} %) · {{ eintraege|length }} Quizze ·
+    Grenzen änderbar unter <a href="/einstellungen">Einstellungen</a>
+  </p>
+</section>
+
+<section class="karte">
+  <h2>Ihre Quizze</h2>
+  {% if eintraege %}
+  <ul class="liste">
+    {% for e in eintraege %}
+    <li class="eintrag">
+      <div class="eintrag-kopf">
+        <h3>{{ e.titel }}</h3>
+        <span class="masse">
+          {{ e.fragen }} Fragen · {{ groesse_text(e.groesse) }} ·
+          geändert {{ zeit_text(e.geaendert_am) }}
+          {% if e.ersetzt_anzahl %}· {{ e.ersetzt_anzahl }}× neu eingereicht{% endif %}
+        </span>
+      </div>
+      <div class="handlungen">
+        <a class="knopf" href="/ablage/{{ e.id }}/oeffnen">In fuiz öffnen</a>
+        <a class="knopf leise" href="/ablage/{{ e.id }}/sicherung">Sicherung</a>
+        <form method="post" action="/ablage/{{ e.id }}/loeschen">
+          <button class="knopf gefahr" type="submit">Löschen</button>
+        </form>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="hinweis">Noch keine Quizze abgelegt. Der erste Teilen-Link von oben legt los.</p>
+  {% endif %}
+</section>
+
+{% if papierkorb %}
+<section class="karte">
+  <h2>Papierkorb <span class="leise">({{ papierkorb|length }}, endgültig nach {{ grenze.tage }} Tagen)</span></h2>
+  <ul class="liste">
+    {% for e in papierkorb %}
+    <li class="eintrag">
+      <div class="eintrag-kopf">
+        <h3>{{ e.titel }}</h3>
+        <span class="masse">{{ e.fragen }} Fragen · {{ groesse_text(e.groesse) }} ·
+          gelöscht {{ zeit_text(e.geloescht_am) }}</span>
+      </div>
+      <div class="handlungen">
+        <form method="post" action="/ablage/{{ e.id }}/wiederherstellen">
+          <button class="knopf" type="submit">Wiederherstellen</button>
+        </form>
+        <form method="post" action="/ablage/{{ e.id }}/endgueltig"
+              onsubmit="return confirm('Endgültig löschen? Der Inhalt und ein etwaiger Übernahme-Link werden entfernt.');">
+          <button class="knopf gefahr" type="submit">Endgültig löschen</button>
+        </form>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{% if ereignisse %}
+<section class="karte leise">
+  <h2>Zuletzt passiert</h2>
+  <ul class="verlauf">
+    {% for z in ereignisse %}
+    <li><span class="zeit">{{ zeit_text(z.zeit) }}</span> {{ z.text }}</li>
+    {% endfor %}
+  </ul>
+  <p class="hinweis klein"><a href="/verlauf">gesamter Verlauf</a></p>
+</section>
+{% endif %}
+
+<script>
+document.getElementById('einreichen').addEventListener('submit', function () {
+  document.getElementById('abschicken').disabled = true;
+  document.getElementById('laeuft').hidden = false;
+});
+</script>
+{% endblock %}

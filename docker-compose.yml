@@ -1,0 +1,47 @@
+# MekoTools — Quizablage (Ablage fuer fuiz-Quizze)
+# Ablage: /poolio/docker/mekotools-quizablage/docker-compose.yml auf flip
+#
+# Zwei Datenschichten, bewusst getrennt:
+#  * ablage-daten  — eigener Bestand, eigenes Volume, gesichert durch rsnapshot.
+#  * fuiz-web-data — der Teilen-Speicher von fuiz (Tabelle kv_share). Wird LESEND
+#    fuer das Einreichen und SCHREIBEND nur fuer eigene Uebernahme-Eintraege
+#    gebraucht. Der Datentraeger gehoert root (wie die fuiz-Behaelter selbst),
+#    deshalb laeuft dieser Behälter als root — die Anwendung oeffnet ausschliesslich
+#    kv_share und fasst fuiz.db nie an.
+services:
+  ablage:
+    build: ./quelle
+    image: mekotools-quizablage:0.1.0
+    container_name: mekotools-quizablage
+    restart: unless-stopped
+    user: "0:0"
+    environment:
+      - ABLAGE_DATEN=/daten/ablage.db
+      - FUIZ_KV=/fuiz/kv.db
+      - ABLAGE_FUIZ_BASIS=https://fuiz.mekotools.de
+      - ABLAGE_FUIZ_HOSTS=fuiz.mekotools.de
+      - ABLAGE_RAEUMEN_STUNDEN=6
+    volumes:
+      - ablage-daten:/daten
+      - fuiz-web-data:/fuiz
+    networks: [coolify]
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=coolify
+      - traefik.http.routers.mekotools-quizablage.rule=Host(`quizablage.mekotools.de`)
+      - traefik.http.routers.mekotools-quizablage.entrypoints=http
+      - traefik.http.middlewares.mekotools-scheme-quizablage.headers.customrequestheaders.X-Forwarded-Host=quizablage.mekotools.de
+      - traefik.http.middlewares.mekotools-scheme-quizablage.headers.customrequestheaders.X-Forwarded-Port=443
+      - traefik.http.middlewares.mekotools-scheme-quizablage.headers.customrequestheaders.X-Forwarded-Proto=https
+      - traefik.http.routers.mekotools-quizablage.middlewares=mekotools-scheme-quizablage,mekotools-auth
+      - traefik.http.services.mekotools-quizablage.loadbalancer.server.port=8000
+
+volumes:
+  ablage-daten:
+  fuiz-web-data:
+    external: true
+    name: mekotools-fuiz_fuiz-web-data
+
+networks:
+  coolify:
+    external: true

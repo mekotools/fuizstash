@@ -1,0 +1,26 @@
+{% extends "grund.html" %}
+{% block titel %}Einstellungen{% endblock %}
+
+{% block inhalt %}
+<section class="karte">
+  <h1>Grenzen der Ablage</h1>
+  <p class="hinweis">
+    Diese Werte gelten für alle Angemeldeten. Änderungen greifen sofort.
+  </p>
+  <form method="post" action="/einstellungen">
+    {% for schluessel, beschriftung in [
+      ('max_quiz_mb', 'Größe je Quiz (MB)'),
+      ('max_nutzer_mb', 'Speicher je Person (MB)'),
+      ('papierkorb_tage', 'Papierkorb (Tage)')
+    ] %}
+    <label for="{{ schluessel }}">{{ beschriftung }}</label>
+    <input id="{{ schluessel }}" name="{{ schluessel }}" type="number" inputmode="numeric"
+           value="{{ werte[schluessel] }}" required>
+    <p class="hinweis klein">{{ beschreibung[schluessel] }}</p>
+    {% endfor %}
+    <button type="submit">Speichern</button>
+  </form>
+</section>
+{% endblock %}
+
+{% block fuss %}Grenzen: {{ werte.max_quiz_mb }} MB je Quiz · {{ werte.max_nutzer_mb }} MB je Person{% endblock %}

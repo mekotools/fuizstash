@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block titel %}Quizablage{% endblock %} — MekoTools</title>
+<link rel="stylesheet" href="/statisch/stil.css">
+</head>
+<body>
+<header class="kopf">
+  <div class="kopf-inhalt">
+    <a class="marke" href="/ablage">Quizablage</a>
+    <nav>
+      <a href="/ablage">Ablage</a>
+      <a href="/einstellungen">Einstellungen</a>
+      <a href="/verlauf">Verlauf</a>
+    </nav>
+    <span class="nutzer" title="{{ nutzer.schluessel }}">{{ nutzer.anzeige }}</span>
+  </div>
+</header>
+
+<main>
+{% if meldung %}
+  <p class="meldung {{ 'fehler' if art == 'fehler' else 'gut' }}" role="status">{{ meldung }}</p>
+{% endif %}
+
+{% if not kopplung.gesund %}
+  <p class="meldung fehler" role="alert">
+    <strong>Verbindung zu fuiz gestört.</strong> {{ kopplung.hinweis }} —
+    Einreichen und Übergeben sind so lange nicht möglich; Ihre Ablage bleibt lesbar.
+  </p>
+{% endif %}
+
+{% block inhalt %}{% endblock %}
+</main>
+
+<footer>
+  <p>
+    Quizablage der MekoTools · Angemeldet als {{ nutzer.anzeige }} ·
+    {% block fuss %}Ablage für fuiz-Quizze{% endblock %}
+  </p>
+</footer>
+</body>
+</html>

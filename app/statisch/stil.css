@@ -1,0 +1,97 @@
+:root {
+  --grund: #f6f7f9;
+  --karte: #ffffff;
+  --text: #1b1d21;
+  --leise: #5d636e;
+  --linie: #dfe3e8;
+  --akzent: #2ea043;
+  --akzent-text: #ffffff;
+  --gefahr: #b3261e;
+  --gut-flaeche: #e7f6ec;
+  --fehler-flaeche: #fdeae8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --grund: #14161a;
+    --karte: #1d2025;
+    --text: #ecedef;
+    --leise: #a6acb6;
+    --linie: #2e333a;
+    --akzent: #2ea043;
+    --gut-flaeche: #17281c;
+    --fehler-flaeche: #2c1a18;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--grund);
+  color: var(--text);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.kopf { background: var(--karte); border-bottom: 1px solid var(--linie); }
+.kopf-inhalt {
+  max-width: 860px; margin: 0 auto; padding: 12px 16px;
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+}
+.marke { font-weight: 650; color: var(--text); text-decoration: none; margin-right: auto; }
+nav { display: flex; gap: 14px; }
+nav a { color: var(--leise); text-decoration: none; }
+nav a:hover, nav a:focus-visible { color: var(--text); text-decoration: underline; }
+.nutzer { color: var(--leise); font-size: 14px; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+main { max-width: 860px; margin: 0 auto; padding: 16px; display: grid; gap: 16px; }
+
+.karte { background: var(--karte); border: 1px solid var(--linie); border-radius: 12px; padding: 16px; }
+.karte.leise { background: transparent; }
+h1 { font-size: 20px; margin: 0 0 8px; }
+h2 { font-size: 17px; margin: 0 0 10px; }
+h3 { font-size: 16px; margin: 0; }
+.hinweis { color: var(--leise); margin: 6px 0 12px; }
+.hinweis.klein { font-size: 14px; }
+.leise { color: var(--leise); font-weight: 400; }
+
+label { display: block; font-size: 14px; color: var(--leise); margin: 10px 0 4px; }
+input {
+  width: 100%; padding: 11px 12px; font-size: 16px;
+  background: var(--grund); color: var(--text);
+  border: 1px solid var(--linie); border-radius: 9px;
+}
+input:focus-visible { outline: 2px solid var(--akzent); outline-offset: 1px; }
+
+button, .knopf {
+  display: inline-block; margin-top: 12px; padding: 11px 16px; font-size: 15px;
+  border: 1px solid transparent; border-radius: 9px; cursor: pointer;
+  background: var(--akzent); color: var(--akzent-text); text-decoration: none;
+}
+button:disabled { opacity: .6; cursor: progress; }
+.knopf.leise { background: transparent; color: var(--text); border-color: var(--linie); }
+.knopf.gefahr, button.gefahr { background: transparent; color: var(--gefahr); border-color: var(--gefahr); }
+.knopf:focus-visible, button:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+.laeuft { margin-left: 10px; color: var(--leise); }
+
+.meldung { border-radius: 10px; padding: 12px 14px; margin: 0; }
+.meldung.gut { background: var(--gut-flaeche); }
+.meldung.fehler { background: var(--fehler-flaeche); }
+
+.liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.eintrag { border: 1px solid var(--linie); border-radius: 10px; padding: 12px; }
+.eintrag-kopf { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
+.masse { color: var(--leise); font-size: 14px; }
+.handlungen { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.handlungen form { margin: 0; }
+.handlungen .knopf, .handlungen button { margin-top: 8px; }
+
+.balken { height: 10px; background: var(--grund); border: 1px solid var(--linie); border-radius: 6px; overflow: hidden; }
+.balken span { display: block; height: 100%; background: var(--akzent); }
+
+.verlauf { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 15px; }
+.verlauf .zeit { color: var(--leise); font-variant-numeric: tabular-nums; }
+.verlauf .art { display: inline-block; min-width: 9em; color: var(--leise); }
+
+footer { max-width: 860px; margin: 0 auto; padding: 8px 16px 28px; color: var(--leise); font-size: 13px; }
+a { color: inherit; }

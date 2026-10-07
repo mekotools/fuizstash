@@ -1,0 +1,22 @@
+{% extends "grund.html" %}
+{% block titel %}Verlauf{% endblock %}
+
+{% block inhalt %}
+<section class="karte">
+  <h1>Verlauf</h1>
+  <p class="hinweis">Was in dieser Ablage mit Ihren Quizzen passiert ist — neueste zuerst.</p>
+  {% if ereignisse %}
+  <ul class="verlauf">
+    {% for z in ereignisse %}
+    <li>
+      <span class="zeit">{{ zeit_text(z.zeit) }}</span>
+      <span class="art">{{ z.art }}</span>
+      {{ z.text }}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="hinweis">Noch nichts passiert.</p>
+  {% endif %}
+</section>
+{% endblock %}
