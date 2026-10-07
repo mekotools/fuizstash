@@ -5,6 +5,12 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Das Arbeitsabbild ist absichtlich schlank (docker:27-cli, Alpine): es bringt
+# docker, buildx und git mit, aber kein bash. Deshalb hier ausdrücklich sh.
+defaults:
+  run:
+    shell: sh
+
 env:
   ABBILD: ghcr.io/mekotools/fuizstash
 
