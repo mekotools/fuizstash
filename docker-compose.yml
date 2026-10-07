@@ -14,7 +14,7 @@ services:
     # festgenagelt auf den Verdauungswert — nicht auf "latest" verlassen.
     # Neuer Stand: Push auf main loest den Laufer aus; danach den Wert hier nachziehen
     # (er steht im Auftragsprotokoll oder in der Paketansicht).
-    image: ghcr.io/mekotools/fuizstash@sha256:3f71620aa69df7906d41ec72f2045c03bc6d585546f4511a1ba3d5af3244dbfd
+    image: ghcr.io/mekotools/fuizstash@sha256:2bfba51c660899f16deed7eb4aa8e08b210622c1bab76e10242022d63e784e1c
     # Rueckfallweg, falls die Registrierung klemmt: Quelle auf dem Wirt liegt unter
     # ./quelle, dann diese zwei Zeilen einkommentieren und die Zeile oben entfernen.
     # build: ./quelle
