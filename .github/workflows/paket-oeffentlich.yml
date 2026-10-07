@@ -1,0 +1,35 @@
+name: Paket oeffentlich stellen
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sichtbarkeit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Sichtbarkeit ueber die Schnittstelle setzen
+        run: |
+          set -eu
+          echo "== vorher =="
+          curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/orgs/mekotools/packages/container/fuizstash" \
+            | head -c 400
+          echo
+          echo "== setzen =="
+          curl -s -o /tmp/antwort.json -w "HTTP %{http_code}\n" -X PATCH \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -d '{"visibility":"public"}' \
+            "https://api.github.com/orgs/mekotools/packages/container/fuizstash"
+          cat /tmp/antwort.json | head -c 400
+          echo
+          echo "== nachher =="
+          curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/orgs/mekotools/packages/container/fuizstash" \
+            | python3 -c "import json,sys; d=json.load(sys.stdin); r=d.get('repository') or {}; print('Sichtbarkeit:', d.get('visibility'), '| verknuepft:', r.get('full_name'))"
