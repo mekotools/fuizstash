@@ -59,9 +59,18 @@ Besonderheiten dieses Aufbaus (nicht annehmen, nachlesen):
   Daemon des Wirts.
 - Anmeldung an GHCR über die Organisations-Geheimnisse `GHCR_TOKEN` und
   `GHCR_BENUTZER` (Forgejo, Einstellungen → Geheimnisse).
-- Das neue Paket ist in GHCR zunächst **privat** und muss einmalig öffentlich
-  gestellt werden; der Schnittstellenweg dafür antwortet mit 404 (die Rechte des
-  Schlüssels reichen dafür nicht) — der Schalter im Browser geht.
+- **Verknüpfung mit einem Depot:** ein von außen (Befehlzeile/fremder Läufer)
+  geschobenes Paket bleibt **ungebunden**; ungebundene Pakete lassen sich nicht
+  öffentlich stellen. Die Bindung entsteht über den Aufkleber
+  `org.opencontainers.image.source="https://github.com/mekotools/fuizstash"` im
+  Dockerfile — er wirkt auch bei einem Push aus dem Forgejo-Läufer (nachgemessen:
+  das Paket zeigt danach `mekotools/fuizstash`).
+- **Sichtbarkeit setzen geht nur im Browser** (Paket → Paket-Einstellungen →
+  Sichtbarkeit ändern). Die Schnittstelle hat dafür **keinen Eintrag**: `PATCH`/`PUT`
+  auf `/orgs/mekotools/packages/container/<paket>` antworten mit 404, und zwar bei
+  jedem Paket — auch bei längst öffentlichen und verknüpften (opencut, filedrop) und
+  auch am Kontopaket. Der `GITHUB_TOKEN` eines Arbeitsablaufs sieht das Paket nicht
+  einmal („Package not found"). Also nicht wieder nach einem Schnittstellenweg suchen.
 
 ## Ausliefern
 
