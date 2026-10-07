@@ -59,18 +59,21 @@ Besonderheiten dieses Aufbaus (nicht annehmen, nachlesen):
   Daemon des Wirts.
 - Anmeldung an GHCR über die Organisations-Geheimnisse `GHCR_TOKEN` und
   `GHCR_BENUTZER` (Forgejo, Einstellungen → Geheimnisse).
-- **Verknüpfung mit einem Depot:** ein von außen (Befehlzeile/fremder Läufer)
-  geschobenes Paket bleibt **ungebunden**; ungebundene Pakete lassen sich nicht
-  öffentlich stellen. Die Bindung entsteht über den Aufkleber
-  `org.opencontainers.image.source="https://github.com/mekotools/fuizstash"` im
-  Dockerfile — er wirkt auch bei einem Push aus dem Forgejo-Läufer (nachgemessen:
-  das Paket zeigt danach `mekotools/fuizstash`).
-- **Sichtbarkeit setzen geht nur im Browser** (Paket → Paket-Einstellungen →
-  Sichtbarkeit ändern). Die Schnittstelle hat dafür **keinen Eintrag**: `PATCH`/`PUT`
-  auf `/orgs/mekotools/packages/container/<paket>` antworten mit 404, und zwar bei
-  jedem Paket — auch bei längst öffentlichen und verknüpften (opencut, filedrop) und
-  auch am Kontopaket. Der `GITHUB_TOKEN` eines Arbeitsablaufs sieht das Paket nicht
-  einmal („Package not found"). Also nicht wieder nach einem Schnittstellenweg suchen.
+- **Erstanlage und Sichtbarkeit (nachgemessen):** ein Paket, das die Befehlzeile
+  oder ein fremder Läufer zum *ersten* Mal schiebt, entsteht in GHCR **privat** —
+  und privat lässt es sich über die Schnittstelle nicht umstellen (es gibt keinen
+  Eintrag dafür; `PATCH`/`PUT` auf `/orgs/mekotools/packages/container/<paket>`
+  antworten mit 404, auch bei längst öffentlichen Paketen). Öffentlich wird es nur,
+  wenn die **Erstanlage aus dem Arbeitsablauf dieses Repos** kommt:
+  `.github/workflows/erstanlage.yml` (nur von Hand auslösbar) baut und schiebt das
+  Abbild — danach ist das Paket **öffentlich**, anonym ziehbar und mit
+  `mekotools/fuizstash` verknüpft. Ein anschließender Push des Forgejo-Läufers
+  ändert das nicht mehr (nachgemessen: Lauf 8 danach, Sichtbarkeit weiter
+  öffentlich). Der Anker `org.opencontainers.image.source` im Dockerfile hält die
+  Verknüpfung.
+- **Nicht `docker push --all-tags` verwenden:** das schiebt jede im Wirt liegende
+  Marke desselben Namens mit, auch veraltete aus früheren Läufen. Nur die beiden
+  eigenen Marken schieben (Übergabe-Kennung und `latest`).
 
 ## Ausliefern
 

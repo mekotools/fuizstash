@@ -42,8 +42,10 @@ jobs:
             -t "$ABBILD:latest" \
             -f Dockerfile .
 
-      - name: Schieben
-        run: docker push --all-tags "$ABBILD"
+      - name: Schieben (nur die beiden eigenen Marken)
+        run: |
+          docker push "$ABBILD:${{ github.sha }}"
+          docker push "$ABBILD:latest"
 
       - name: Nachweis
         run: |
