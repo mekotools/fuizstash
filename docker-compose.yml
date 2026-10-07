@@ -10,8 +10,15 @@
 #    kv_share und fasst fuiz.db nie an.
 services:
   fuizstash:
-    build: ./quelle
-    image: mekotools-fuizstash:0.1.0
+    # Abbild aus der eigenen CI (Forgejo-Laeufer, Einzelheiten in docs/betrieb.md),
+    # festgenagelt auf den Verdauungswert — nicht auf "latest" verlassen.
+    # Neuer Stand: Push auf main loest den Laufer aus; danach den Wert hier nachziehen
+    # (er steht im Auftragsprotokoll oder in der Paketansicht).
+    image: ghcr.io/mekotools/fuizstash@sha256:3f71620aa69df7906d41ec72f2045c03bc6d585546f4511a1ba3d5af3244dbfd
+    # Rueckfallweg, falls die Registrierung klemmt: Quelle auf dem Wirt liegt unter
+    # ./quelle, dann diese zwei Zeilen einkommentieren und die Zeile oben entfernen.
+    # build: ./quelle
+    # image: mekotools-fuizstash:0.1.0
     container_name: mekotools-fuizstash
     restart: unless-stopped
     user: "0:0"

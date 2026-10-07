@@ -39,8 +39,8 @@ app/fuizspeicher.py   Kopplung an den Teilen-Speicher von fuiz (lesen + eigene E
 app/kennungen.py      Teilen-Link/Kennung lesen und prüfen (Form zuerst!)
 app/vorlagen/         HTML-Vorlagen   app/statisch/stil.css   Stil
 tests/test_ablage.py  26 Prüfungen
-docker-compose.yml    Behälteraufsatz für flip
-ausliefern.sh         Spiegeln, bauen, neu erzeugen
+docker-compose.yml    Behälteraufsatz für flip (zieht das Abbild, digest-genagelt)
+ausliefern.sh         Spiegeln, Abbild ziehen, Behälter neu erzeugen
 ```
 
 ## Regeln für die Weiterarbeit
@@ -65,7 +65,9 @@ ausliefern.sh         Spiegeln, bauen, neu erzeugen
 Jeder Push auf `main` löst `.forgejo/workflows/abbild.yml` aus: der eigene
 Forgejo-Läufer (`flip-01` in der Organisation `mekotools`) baut das Abbild und
 schiebt es nach `ghcr.io/mekotools/fuizstash` (Marken `latest` und Übergabe-Kennung).
-Voraussetzungen und Fallen stehen in [docs/betrieb.md](docs/betrieb.md).
+Der Betrieb auf flip **zieht** dieses Abbild, festgenagelt auf den Verdauungswert —
+der Wirt baut nicht mehr selbst. Voraussetzungen, Fallen und der Weg zum neuen Stand
+stehen in [docs/betrieb.md](docs/betrieb.md).
 
 ## Umgebung
 

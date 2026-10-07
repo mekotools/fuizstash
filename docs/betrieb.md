@@ -77,14 +77,26 @@ Besonderheiten dieses Aufbaus (nicht annehmen, nachlesen):
 
 ## Ausliefern
 
-    ./ausliefern.sh          # Quelle spiegeln, Abbild bauen, Behälter neu erzeugen
-    ./ausliefern.sh pruefen  # nur Zustand ansehen
+    ./ausliefern.sh          # Quelle spiegeln (Rückfallweg), Abbild ziehen, Behälter neu erzeugen
+    ./ausliefern.sh pruefen  # Zustand, laufendes Abbild, Gesundheit, Außensicht
 
-Nach einem grünen Lauf lässt sich der Stapel statt selbst zu bauen auch das
-veröffentlichte Abbild ziehen (digest-genagelt, wie bei den übrigen Werkzeugen):
+Der Stapel **zieht** sein Abbild seit 07.10.2026 aus GHCR, festgenagelt auf den
+Verdauungswert (`image: ghcr.io/mekotools/fuizstash@sha256:…` in
+`docker-compose.yml`). Der Wirt baut nicht mehr selbst und braucht keine
+Zugangsdaten, weil das Paket öffentlich ist (nachgemessen: `DOCKER_CONFIG` auf ein
+leeres Verzeichnis gesetzt und trotzdem gezogen).
 
-    image: ghcr.io/mekotools/fuizstash@sha256:<Verdauungswert>
-    # build: ./quelle entfällt dann
+Neuen Stand ausliefern:
+
+1. Push auf `main` → der Forgejo-Läufer baut und schiebt; der Lauf muss grün sein.
+2. Verdauungswert des neuen Standes holen (Paketansicht auf GitHub oder
+   `docker manifest inspect ghcr.io/mekotools/fuizstash:latest`).
+3. Wert in `docker-compose.yml` eintragen, `./ausliefern.sh` laufen lassen.
+
+**Zurückrollen:** alten Verdauungswert eintragen und erneut ausliefern.
+**Rückfallweg ohne Registrierung:** in `docker-compose.yml` die beiden
+`build: ./quelle`-Zeilen einkommentieren und die `image:`-Zeile mit dem Wert
+entfernen, dann `docker compose build && docker compose up -d --no-deps fuizstash`.
 
 ## Notfälle
 
@@ -93,4 +105,6 @@ veröffentlichte Abbild ziehen (digest-genagelt, wie bei den übrigen Werkzeugen
   nur Einreichen und Übergeben sind gesperrt.
 - **Quiz im Browser fehlt nach dem Öffnen**: Übernahme-Link im Adressfeld erneut aufrufen; der
   Eintrag ist fristlos. Hilft das nicht, „Sicherung" herunterladen und in fuiz importieren.
-- **Behälter neu bauen**: `cd /poolio/docker/mekotools-fuizstash && docker compose build && docker compose up -d --no-deps ablage`.
+- **Behälter neu bauen (Rückfallweg ohne Registrierung)**: in `docker-compose.yml` die
+  `build: ./quelle`-Zeilen einkommentieren und die `image:`-Zeile mit dem Verdauungswert entfernen,
+  dann `cd /poolio/docker/mekotools-fuizstash && docker compose build && docker compose up -d --no-deps fuizstash`.
