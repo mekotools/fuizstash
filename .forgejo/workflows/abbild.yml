@@ -5,8 +5,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# Das Arbeitsabbild ist absichtlich schlank (docker:27-cli, Alpine): es bringt
-# docker, buildx und git mit, aber kein bash. Deshalb hier ausdrücklich sh.
+# Das Arbeitsabbild ist absichtlich schlank (docker:27-cli, Alpine): docker, buildx
+# und git sind drin, bash und node nicht. Deshalb:
+#  * ausdrücklich sh als Schale
+#  * Quelltext per git holen statt mit actions/checkout (das braucht node)
 defaults:
   run:
     shell: sh
@@ -19,11 +21,14 @@ jobs:
     # Läuft auf dem eigenen Läufer (flip-01), Etikett "docker".
     runs-on: docker
     steps:
-      - name: Arbeitsordner ansehen
+      - name: Quelle holen
         run: |
-          pwd
+          git config --global --add safe.directory '*'
+          git clone --quiet "${{ github.server_url }}/${{ github.repository }}.git" . || \
+            git clone --quiet "${{ github.repository }}.git" .
+          git checkout --quiet "${{ github.sha }}"
+          git log --oneline -1
           ls -la
-          git log --oneline -1 2>/dev/null || echo "(kein git-Bestand im Arbeitsordner)"
 
       - name: An GHCR anmelden
         run: |
