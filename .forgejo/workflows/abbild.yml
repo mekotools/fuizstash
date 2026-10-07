@@ -1,0 +1,40 @@
+name: Abbild bauen und nach GHCR schieben
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  ABBILD: ghcr.io/mekotools/fuizstash
+
+jobs:
+  abbild:
+    # Läuft auf dem eigenen Läufer (flip-01), Etikett "docker".
+    runs-on: docker
+    steps:
+      - name: Arbeitsordner ansehen
+        run: |
+          pwd
+          ls -la
+          git log --oneline -1 2>/dev/null || echo "(kein git-Bestand im Arbeitsordner)"
+
+      - name: An GHCR anmelden
+        run: |
+          echo "${{ secrets.GHCR_TOKEN }}" | \
+            docker login ghcr.io -u "${{ secrets.GHCR_BENUTZER }}" --password-stdin
+
+      - name: Bauen (Fassung = Übergabe-Kennung)
+        run: |
+          docker build \
+            -t "$ABBILD:${{ github.sha }}" \
+            -t "$ABBILD:latest" \
+            -f Dockerfile .
+
+      - name: Schieben
+        run: docker push --all-tags "$ABBILD"
+
+      - name: Nachweis
+        run: |
+          docker image inspect "$ABBILD:latest" --format 'Abbild {{.Id}} · Größe {{.Size}} Bytes'
+          docker run --rm "$ABBILD:latest" python -c "import app.main; print('Anwendung importierbar')"
