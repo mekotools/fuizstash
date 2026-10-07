@@ -60,6 +60,13 @@ ausliefern.sh         Spiegeln, bauen, neu erzeugen
     uv pip install --python .venv/bin/python -r requirements.txt
     .venv/bin/python -m pytest
 
+## Bau-Auftrag
+
+Jeder Push auf `main` löst `.forgejo/workflows/abbild.yml` aus: der eigene
+Forgejo-Läufer (`flip-01` in der Organisation `mekotools`) baut das Abbild und
+schiebt es nach `ghcr.io/mekotools/fuizstash` (Marken `latest` und Übergabe-Kennung).
+Voraussetzungen und Fallen stehen in [docs/betrieb.md](docs/betrieb.md).
+
 ## Umgebung
 
 - `FUIZ_KV` — Pfad zur `kv.db` von fuiz im Behälter (dort `/fuiz/kv.db`)

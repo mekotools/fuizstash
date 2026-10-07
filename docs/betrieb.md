@@ -41,10 +41,38 @@
   Danach **nur** den Sperrdienst neu erzeugen: `docker compose up -d --no-deps tinyauth` — ein
   Neubau des ganzen Stapels hat früher schon andere Dienste stillgelegt.
 
+## Bau-Auftrag (Forgejo-Läufer)
+
+Der Läufer `flip-01` hängt an der Organisation `mekotools` und läuft als Stapel
+`/poolio/docker/forgejo-runner` auf flip. Er baut aus der Quelle ein Abbild und
+schiebt es nach `ghcr.io/mekotools/fuizstash`. Ausgelöst bei jedem Push auf `main`
+und über `.forgejo/workflows/abbild.yml`.
+
+Besonderheiten dieses Aufbaus (nicht annehmen, nachlesen):
+
+- Der Läufer spricht Forgejo **intern** an (`http://forgejo-server:3000`): von flip
+  aus ist `git.n0ne.de` über den VPS nicht erreichbar.
+- Arbeitsabbild ist `docker:27-cli` — es hat docker, buildx und git, aber **kein
+  bash und kein node**. Deshalb steht im Auftrag `shell: sh`, und die Quelle wird
+  per `git clone` geholt statt mit `actions/checkout` (das braucht node).
+- Der Docker-Sockel ist in den Auftrag gereicht; `docker build` läuft also auf dem
+  Daemon des Wirts.
+- Anmeldung an GHCR über die Organisations-Geheimnisse `GHCR_TOKEN` und
+  `GHCR_BENUTZER` (Forgejo, Einstellungen → Geheimnisse).
+- Das neue Paket ist in GHCR zunächst **privat** und muss einmalig öffentlich
+  gestellt werden; der Schnittstellenweg dafür antwortet mit 404 (die Rechte des
+  Schlüssels reichen dafür nicht) — der Schalter im Browser geht.
+
 ## Ausliefern
 
     ./ausliefern.sh          # Quelle spiegeln, Abbild bauen, Behälter neu erzeugen
     ./ausliefern.sh pruefen  # nur Zustand ansehen
+
+Nach einem grünen Lauf lässt sich der Stapel statt selbst zu bauen auch das
+veröffentlichte Abbild ziehen (digest-genagelt, wie bei den übrigen Werkzeugen):
+
+    image: ghcr.io/mekotools/fuizstash@sha256:<Verdauungswert>
+    # build: ./quelle entfällt dann
 
 ## Notfälle
 
